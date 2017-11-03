@@ -1,0 +1,27 @@
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!--针对XMLValidateAction动作类中的login方法添加的输入验证的配置文件-->
+    <field name="username"> <!--针对username配置的验证规则-->
+        <!--requiredstring不能为空字符串-->
+        <!--type取值参见xwork/com/struts/validator/validators/default-xml 配置文件中提供的几种厂家验证方式-->
+
+        <!--<field-validator type="requiredstring">-->
+        <field-validator type="idcard">
+            <!--当username输入的不合法的时候的提供的错误信息-->
+            <!--<message>用户名不能为空</message>-->
+            <message>身份证号码不符合</message>
+        </field-validator>
+    </field>
+
+    <field name="password">
+        <!--regex正则表达式-->
+        <field-validator type="regex">
+            <!--定义正则表达式的条件-->
+            <param name="regexExpression"><![CDATA[[a-zA-Z]{3,8}]]></param>
+            <message>密码必须有3-8位的字母组成</message>
+        </field-validator>
+    </field>
+
+</validators>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="day03" extends="struts-default">
+        <action name="login"
+                class="com.lanou.action.CustomerValidateAction"
+                method="login">
+            <result name="success">/success.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+
+        <action name="findAll"
+                class="com.lanou.action.CustomerValidateAction"
+                method="findAll">
+            <result name="success">/success.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+
+        <action name="register"
+                class="com.lanou.action.CustomerValidateAction"
+                method="register">
+            <result name="success">/success.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+    </package>
+
+    <package name="day-03-xml" extends="struts-default" namespace="/xml">
+        <action name="*"
+                class="com.lanou.action.XMLValidateAction"
+                method="{1}">
+            <result name="input">/login.jsp</result>
+            <result name="success">/success.jsp</result>
+        </action>
+    </package>
+
+    <package name="day-03-interceptor" extends="struts-default" namespace="/inter">
+        <!--声明自定义拦截器对象-->
+        <interceptors>
+            <interceptor name="demointerceptor"
+                         class="com.lanou.interceptor.DemoInterceptor"/>
+            <!--声明登录拦截器-->
+            <interceptor name="loginCheck"
+                         class="com.lanou.interceptor.LoginInterceptor"/>
+
+            <!--声明一个拦截器集合,将多个拦截器放在一个stack栈中-->
+            <interceptor-stack name="myInterceptorStack">
+
+                <interceptor-ref name="demointerceptor"/>
+
+                <!--将登录拦截器加入自定义拦截器中-->
+                <interceptor-ref name="loginCheck">
+                    <!--添加拦截添加-->
+                    <!--排除拦截方法,多个用逗号隔开-->
+                    <param name="excludeMethods">login</param>
+                    <!--拦截方法指定,-->
+                    <param name="includeMethods">add,update</param>
+                </interceptor-ref>
+
+
+
+                <!--将struts提供的默认的拦截器栈加入自定义的拦截器中,此种方式保证了原来的struts提供的拦截器仍然好用,
+                如果不加defaultStack,则使用自定义拦截器的时候原来struts的拦截器不好用-->
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <!--给当前package中的所有action动作都设置自定义的拦截器,即所有的action调用都会先进入自定义拦截器-->
+       <default-interceptor-ref name="myInterceptorStack"/>
+
+
+        <!--定义全局结果视图,当返回login时,跳转到登录界面-->
+        <global-results>
+            <result name="login">/login.jsp</result>
+        </global-results>
+
+
+        <action name="test"
+                class="com.lanou.interceptor.TestInterceptorAction">
+
+            <!--给某个action动作添加自定义拦截器,可以添加某个拦截器(demointerceptor),也可以添加一个拦截器的栈(myInterceptorStack)-->
+            <!--执行自定义的不会进入系统的-->
+            <!--<interceptor-ref name="demointerceptor"/>-->
+
+
+            <interceptor-ref name="myInterceptorStack"/>
+
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <action name="register"
+                class="com.lanou.interceptor.TestInterceptorAction"
+                method="register">
+            <result name="success">/success.jsp</result>
+        </action>
+        <action name="login"
+                class="com.lanou.interceptor.TestInterceptorAction"
+                method="login">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!--登录拦截器案例-->
+        <action name="login_UI"
+                class="com.lanou.interceptor.LoginAction"
+                method="login">
+            <result name="success">/success.jsp</result>
+        </action>
+        <action name="add_UI"
+                class="com.lanou.interceptor.LoginAction"
+                method="add">
+            <result name="success">/success.jsp</result>
+        </action>
+        <action name="update_UI"
+                class="com.lanou.interceptor.LoginAction"
+                method="update">
+            <result name="success">/success.jsp</result>
+        </action>
+    </package>
+
+
+</struts>
